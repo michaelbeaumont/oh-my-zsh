@@ -107,6 +107,19 @@ bindkey "^H" backward-delete-char  # vi-backward-delete-char
 bindkey "^U" kill-line             # vi-kill-line
 bindkey "^?" backward-delete-char  # vi-backward-delete-char
 
+#fix delete
+if [[ "${terminfo[kdch1]}" != "" ]]; then
+  bindkey "${terminfo[kdch1]}" delete-char            # [Delete] - delete forward
+  bindkey -M vicmd "${terminfo[kdch1]}" vi-delete-char            # [Delete] - delete forward
+else
+  bindkey "^[[3~" delete-char
+  bindkey "^[3;5~" delete-char
+  bindkey "\e[3~" delete-char
+  bindkey -M vicmd "^[[3~" vi-delete-char
+  bindkey -M vicmd "^[3;5~" vi-delete-char
+  bindkey -M vicmd "\e[3~" vi-delete-char
+fi
+
 #needed?
 bindkey ' ' magic-space                               # [Space] - do history expansion
 
