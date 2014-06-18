@@ -15,9 +15,17 @@ INSERT_PROMPT="gray"
 COMMAND_PROMPT="red"
 
 # helper for setting color including all kinds of terminals
+# \033 is \e is ESC
 set_prompt_color() {
-    if [[ $TERM = "linux" ]]; then
-       # nothing
+    if [[ $TERM = "linux" || $TERM = "fbterm" ]]; then
+        #see tty_prompt_colors
+        if [[ $1 = $INSERT_PROMPT ]]; then
+            #Turn the cursor white
+            echo -ne "\033[?16;0;127;c"
+        else
+            #Turn the cursor "red"
+            echo -ne "\033[?16;0;64;c"
+        fi
     elif [[ $TMUX != '' ]]; then
         printf '\033Ptmux;\033\033]12;%b\007\033\\' "$1"
     else
