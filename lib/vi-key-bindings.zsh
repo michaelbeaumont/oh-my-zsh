@@ -34,16 +34,27 @@ zle-keymap-select () {
     fi
 }
 
-zle-line-finish() {
-    echoti rmkx
-    set_prompt_color $INSERT_PROMPT
-}
+if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
+    zle-line-finish() {
+        echoti rmkx
+        set_prompt_color $INSERT_PROMPT
+    }
 
-zle-line-init () {
-    echoti smkx
-    zle -K viins
-    set_prompt_color $INSERT_PROMPT
-}
+    zle-line-init () {
+        echoti smkx
+        zle -K viins
+        set_prompt_color $INSERT_PROMPT
+    }
+else
+    zle-line-finish() {
+        set_prompt_color $INSERT_PROMPT
+    }
+
+    zle-line-init () {
+        zle -K viins
+        set_prompt_color $INSERT_PROMPT
+    }
+fi
 
 zle -N zle-keymap-select
 zle -N zle-line-init
